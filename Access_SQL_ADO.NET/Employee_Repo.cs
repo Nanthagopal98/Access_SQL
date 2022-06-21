@@ -35,6 +35,96 @@ namespace Access_SQL_ADO.NET
             {
                 this.connection.Close();
             }
-        }       
+        }
+        public void GetAllEmployees()
+        {
+            try
+            {
+                Payroll_Model model = new Payroll_Model();
+                using (this.connection)
+                {
+                    string query = @"SELECT ID,NAME,SALARY,START_DATE,GENDER,PHONE,ADDRESS,DEPARTMENT
+                    BASIC_PAY,DEDUCTIONS,TAXABLE_PAY,NET_PAY FROM Employee_Payroll;";
+                    this.connection.Open();
+                    SqlCommand command = new SqlCommand(query, this.connection);
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            model.ID = reader.GetInt32(0);
+                            model.NAME = reader.GetString(1);
+                            model.SALARY = reader.GetDouble(2);
+                            model.START_DATE = reader.GetDateTime(3);
+                            model.GENDER = reader.GetString(4);
+                            model.PHONE = reader.GetInt32(5);
+                            model.ADDRESS = reader.GetString(6);
+                            model.DEPARTMENT = reader.GetString(7);
+                            model.SALARY = reader.GetDouble(2);
+                            model.DEDUCTIONS = reader.GetDouble(8);
+                            model.TAXABLE_PAY = reader.GetDouble(9);
+                            model.NET_PAY = reader.GetDouble(10);
+                            Console.WriteLine("Employee ID : " + model.ID + "\nEmployee Name : " + model.NAME + "\n Salary : " + model.SALARY
+                                + "\nStart Date : " + model.START_DATE + "\nGender : " + model.GENDER + "\nPhone : " + model.PHONE + "\nAddress : " + model.ADDRESS
+                                + "\nDepartment : " + model.DEPARTMENT + "\nDeductions : " + model.DEDUCTIONS + "\nTax : " + model.TAXABLE_PAY
+                                + "\nNetPay : " + model.NET_PAY);
+                            Console.WriteLine("===========");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("NO Data Found");
+                    }
+                    reader.Close();
+                    this.connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                this.connection.Close();
+            }
+        }
+        public bool AddEmployee(Payroll_Model model)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    SqlCommand command = new SqlCommand("ADD_EMPLOYEE", this.connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@NAME", model.NAME);
+                    command.Parameters.AddWithValue("@SALARY", model.SALARY);
+                    command.Parameters.AddWithValue("@START_DATE", model.START_DATE);
+                    command.Parameters.AddWithValue("@GENDER", model.GENDER);
+                    command.Parameters.AddWithValue("@PHONE", model.PHONE);
+                    command.Parameters.AddWithValue("@ADDRESS", model.ADDRESS);
+                    command.Parameters.AddWithValue("@DEPARTMENT", model.DEPARTMENT);
+                    command.Parameters.AddWithValue("@BASIC_PAY", model.BASIC_PAY);
+                    command.Parameters.AddWithValue("@DEDUCTIONS", model.DEDUCTIONS);
+                    command.Parameters.AddWithValue("@TAXABLE_PAY", model.TAXABLE_PAY);
+                    command.Parameters.AddWithValue("@NET_PAY", model.NET_PAY);
+                    this.connection.Open();
+                    var result = command.ExecuteNonQuery();
+                    this.connection.Close();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally
+            {
+                this.connection.Close();
+            }
+        }
     }
 }
