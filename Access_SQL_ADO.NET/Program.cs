@@ -29,6 +29,7 @@ switch(option)
         model.TAXABLE_PAY = 300;
         model.NET_PAY = 44500;
         select.AddEmployee(model);
+        select.GetAllEmployees();
         break;
     case 4:
         select.UpdateValue();

@@ -11,18 +11,19 @@ namespace Access_SQL_ADO.NET
     public class Employee_Repo
     {
         public static string connectionString = "Data Source = (localdb)\\MSSQLLocalDB;Initial Catalog = Payroll_Service;";
-        SqlConnection connection = new SqlConnection(connectionString);
+        
         public DataSet GetPayroll()
         {
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
                 DataSet data = new DataSet();
-                using (this.connection)
+                using (connection)
                 {
-                    this.connection.Open();                    
-                    SqlDataAdapter adapter = new SqlDataAdapter("CONNECTIVITY", this.connection);
+                    connection.Open();                    
+                    SqlDataAdapter adapter = new SqlDataAdapter("CONNECTIVITY", connection);
                     adapter.Fill(data);
-                    this.connection.Close();
+                    connection.Close();
                     Console.WriteLine("Connection Established");
                     return data;
                 }
@@ -33,19 +34,20 @@ namespace Access_SQL_ADO.NET
             }
             finally
             {
-                this.connection.Close();
+                connection.Close();
             }
         }
         public void GetAllEmployees()
         {
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
                 Payroll_Model model = new Payroll_Model();
-                using (this.connection)
+                using (connection)
                 {
                     string query = @"SELECT * FROM Employee_Payroll;";
-                    this.connection.Open();
-                    SqlCommand command = new SqlCommand(query, this.connection);
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(query, connection);
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
                     {
@@ -75,7 +77,7 @@ namespace Access_SQL_ADO.NET
                         Console.WriteLine("NO Data Found");
                     }
                     reader.Close();
-                    this.connection.Close();
+                    connection.Close();
                 }
             }
             catch (Exception e)
@@ -84,16 +86,17 @@ namespace Access_SQL_ADO.NET
             }
             finally
             {
-                this.connection.Close();
+                connection.Close();
             }
         }
         public bool AddEmployee(Payroll_Model model)
         {
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                using (this.connection)
+                using (connection)
                 {
-                    SqlCommand command = new SqlCommand("ADD_EMPLOYEE", this.connection);
+                    SqlCommand command = new SqlCommand("ADD_EMPLOYEE", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@NAME", model.NAME);
                     command.Parameters.AddWithValue("@SALARY", model.SALARY);
@@ -106,9 +109,9 @@ namespace Access_SQL_ADO.NET
                     command.Parameters.AddWithValue("@DEDUCTIONS", model.DEDUCTIONS);
                     command.Parameters.AddWithValue("@TAXABLE_PAY", model.TAXABLE_PAY);
                     command.Parameters.AddWithValue("@NET_PAY", model.NET_PAY);
-                    this.connection.Open();
+                    connection.Open();
                     var result = command.ExecuteNonQuery();
-                    this.connection.Close();
+                    connection.Close();
                     if (result != 0)
                     {
                         return true;
@@ -122,17 +125,18 @@ namespace Access_SQL_ADO.NET
             }
             finally
             {
-                this.connection.Close();
+                connection.Close();
             }
         }
         public void UpdateValue()
         {
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                using (this.connection)
+                using (connection)
                 {
-                    this.connection.Open();
-                    SqlCommand command = new SqlCommand("UPDATE_VALUES", this.connection);
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("UPDATE_VALUES", connection);
                     command.ExecuteNonQuery();
                 }
             }
@@ -140,16 +144,17 @@ namespace Access_SQL_ADO.NET
             {
                 throw new Exception(e.Message);
             }
-            finally { this.connection.Close(); }
+            finally { connection.Close(); }
         }
         public void DeleteEmployee(string NAME)
         {
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                using (this.connection)
+                using (connection)
                 {                    
-                    this.connection.Open();
-                    SqlCommand command = new SqlCommand("DELETE_EMPLOYEE", this.connection);
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("DELETE_EMPLOYEE", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@NAME", NAME);
                     command.ExecuteNonQuery();
@@ -159,7 +164,7 @@ namespace Access_SQL_ADO.NET
             {
                 throw new Exception(e.Message);
             }
-            finally { this.connection.Close(); }
+            finally { connection.Close(); }
         }
     }
 } 
