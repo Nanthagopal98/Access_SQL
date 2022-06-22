@@ -5,6 +5,8 @@ Payroll_Model model = new Payroll_Model();
 Console.WriteLine("1 - Establish Connectivity");
 Console.WriteLine("2 - Retrieve or Add Data to DataBase");
 Console.WriteLine("3 - Retrieve or Add Data to DataBase");
+Console.WriteLine("4 - Update Salary");
+Console.WriteLine("5 - Delete Salary");
 int option = Convert.ToInt32(Console.ReadLine());
 switch(option)
 {
@@ -31,5 +33,10 @@ switch(option)
     case 4:
         select.UpdateValue();
         break;
-        
+    case 5:
+        Console.WriteLine("Enter Name");
+        string NAME = Console.ReadLine();
+        select.DeleteEmployee(NAME);
+        break;
+
 }

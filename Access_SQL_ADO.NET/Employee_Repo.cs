@@ -142,5 +142,24 @@ namespace Access_SQL_ADO.NET
             }
             finally { this.connection.Close(); }
         }
+        public void DeleteEmployee(string NAME)
+        {
+            try
+            {
+                using (this.connection)
+                {                    
+                    this.connection.Open();
+                    SqlCommand command = new SqlCommand("DELETE_EMPLOYEE", this.connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@NAME", NAME);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally { this.connection.Close(); }
+        }
     }
 } 
