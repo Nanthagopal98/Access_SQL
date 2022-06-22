@@ -28,4 +28,8 @@ switch(option)
         model.NET_PAY = 44500;
         select.AddEmployee(model);
         break;
+    case 4:
+        select.UpdateValue();
+        break;
+        
 }

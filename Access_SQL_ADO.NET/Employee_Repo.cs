@@ -43,8 +43,7 @@ namespace Access_SQL_ADO.NET
                 Payroll_Model model = new Payroll_Model();
                 using (this.connection)
                 {
-                    string query = @"SELECT ID,NAME,SALARY,START_DATE,GENDER,PHONE,ADDRESS,DEPARTMENT
-                    BASIC_PAY,DEDUCTIONS,TAXABLE_PAY,NET_PAY FROM Employee_Payroll;";
+                    string query = @"SELECT * FROM Employee_Payroll;";
                     this.connection.Open();
                     SqlCommand command = new SqlCommand(query, this.connection);
                     SqlDataReader reader = command.ExecuteReader();
@@ -60,13 +59,13 @@ namespace Access_SQL_ADO.NET
                             model.PHONE = reader.GetInt32(5);
                             model.ADDRESS = reader.GetString(6);
                             model.DEPARTMENT = reader.GetString(7);
-                            model.SALARY = reader.GetDouble(2);
-                            model.DEDUCTIONS = reader.GetDouble(8);
-                            model.TAXABLE_PAY = reader.GetDouble(9);
-                            model.NET_PAY = reader.GetDouble(10);
+                            model.BASIC_PAY = reader.GetDouble(8);
+                            model.DEDUCTIONS = reader.GetDouble(9);
+                            model.TAXABLE_PAY = reader.GetDouble(10);
+                            model.NET_PAY = reader.GetDouble(11);
                             Console.WriteLine("Employee ID : " + model.ID + "\nEmployee Name : " + model.NAME + "\n Salary : " + model.SALARY
                                 + "\nStart Date : " + model.START_DATE + "\nGender : " + model.GENDER + "\nPhone : " + model.PHONE + "\nAddress : " + model.ADDRESS
-                                + "\nDepartment : " + model.DEPARTMENT + "\nDeductions : " + model.DEDUCTIONS + "\nTax : " + model.TAXABLE_PAY
+                                + "\nDepartment : " + model.DEPARTMENT +"\nBasic Pay : "+model.BASIC_PAY+ "\nDeductions : " + model.DEDUCTIONS + "\nTax : " + model.TAXABLE_PAY
                                 + "\nNetPay : " + model.NET_PAY);
                             Console.WriteLine("===========");
                         }
@@ -126,5 +125,22 @@ namespace Access_SQL_ADO.NET
                 this.connection.Close();
             }
         }
+        public void UpdateValue()
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    this.connection.Open();
+                    SqlCommand command = new SqlCommand("UPDATE_VALUES", this.connection);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            finally { this.connection.Close(); }
+        }
     }
-}
+} 
