@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 
+
 namespace Access_SQL_ADO.NET
 {
     public class Employee_Repo
     {
         public static string connectionString = "Data Source = (localdb)\\MSSQLLocalDB;Initial Catalog = Payroll_Service;";
-        
+        List<Payroll_Model> payrollList = new List<Payroll_Model>();
         public DataSet GetPayroll()
         {
             SqlConnection connection = new SqlConnection(connectionString);
@@ -42,7 +43,8 @@ namespace Access_SQL_ADO.NET
             SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                Payroll_Model model = new Payroll_Model();
+                Payroll_Model model = new Payroll_Model( Name : "name", Salary : 0, Start_Date : DateTime.Now, Gender : "M", Phone : 0, Address : "address",
+                Department : "dept", Bassic_Pay : 0, Deduction : 0, Taxable_Pay : 0,  Net_Pay : 0);
                 using (connection)
                 {
                     string query = @"SELECT * FROM Employee_Payroll;";
@@ -158,6 +160,7 @@ namespace Access_SQL_ADO.NET
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@NAME", NAME);
                     command.ExecuteNonQuery();
+                    Console.WriteLine("Employee " + NAME + " Deleted");
                 }
             }
             catch (Exception e)
@@ -165,6 +168,15 @@ namespace Access_SQL_ADO.NET
                 throw new Exception(e.Message);
             }
             finally { connection.Close(); }
+        }
+        public void AddEmployeePayroll(List<Payroll_Model> payrollList)
+        {
+            payrollList.ForEach(EmpDetail =>
+            {
+                Console.WriteLine("Employee Being Added : " + EmpDetail.NAME);
+                AddEmployee(EmpDetail);
+                Console.WriteLine(EmpDetail.NAME + " Added");
+            });
         }
     }
 } 
