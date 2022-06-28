@@ -20,6 +20,11 @@ namespace Payroll_Test
             employee_repo.AddEmployeePayroll(model);
             DateTime endTime = DateTime.Now;
             Console.WriteLine("Elapsed Time Without Thread : " + (endTime - startTime));
+
+            DateTime threadstartTime = DateTime.Now;
+            employee_repo.AddEmployeePayrollWithThread(model);
+            DateTime threadEndTime = DateTime.Now;
+            Console.WriteLine("Elapsed Time Using Thread : " + (threadEndTime - threadstartTime));
         }
     }
 }

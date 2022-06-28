@@ -1,13 +1,15 @@
 ﻿using Access_SQL_ADO.NET;
 
 Employee_Repo select = new Employee_Repo();
-Payroll_Model model = new Payroll_Model(Name: "name", Salary: 0, Start_Date: DateTime.Now, Gender: "M", Phone: 0, Address: "address",
-                Department: "dept", Bassic_Pay: 0, Deduction: 0, Taxable_Pay: 0, Net_Pay: 0);
+Payroll_Model model = new Payroll_Model(Name: null, Salary: 0, Start_Date: DateTime.Now, Gender: null, Phone: 0, Address: null,
+                Department: null, Bassic_Pay: 0, Deduction: 0, Taxable_Pay: 0, Net_Pay: 0);
 Console.WriteLine("1 - Establish Connectivity");
 Console.WriteLine("2 - Retrieve Data From DataBase");
 Console.WriteLine("3 - Add Data to DataBase");
 Console.WriteLine("4 - Update Salary");
 Console.WriteLine("5 - Delete Salary");
+Console.WriteLine("6 - Add Employee Payroll Without Thread");
+Console.WriteLine("7 - Add Employee Payroll Using Thread");
 int option = Convert.ToInt32(Console.ReadLine());
 switch(option)
 {
@@ -40,5 +42,10 @@ switch(option)
         string NAME = Console.ReadLine();
         select.DeleteEmployee(NAME);
         break;
-
+    case 6:
+        //select.AddEmployeePayroll(model);
+        break;
+    case 7:
+        //select.AddEmployeePayroll(model);
+        break;
 }

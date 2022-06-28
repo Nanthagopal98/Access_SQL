@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using System.Threading.Tasks;
 
 
 namespace Access_SQL_ADO.NET
@@ -177,6 +178,20 @@ namespace Access_SQL_ADO.NET
                 AddEmployee(EmpDetail);
                 Console.WriteLine(EmpDetail.NAME + " Added");
             });
+        }
+        public void AddEmployeePayrollWithThread(List<Payroll_Model> payrollList)
+        {
+            payrollList.ForEach(EmpDetails =>
+            {
+                Thread thread = new Thread(() =>
+                {
+                    Console.WriteLine("Employee Being Added : " + EmpDetails.NAME);
+                    
+                    Console.WriteLine(EmpDetails.NAME + " Added");
+                });
+                thread.Start();
+            });
+           
         }
     }
 } 
