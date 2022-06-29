@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-using System.Threading.Tasks;
+
 
 
 namespace Access_SQL_ADO.NET
@@ -97,29 +96,32 @@ namespace Access_SQL_ADO.NET
             SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                using (connection)
+                lock (this)
                 {
-                    SqlCommand command = new SqlCommand("ADD_EMPLOYEE", connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@NAME", model.NAME);
-                    command.Parameters.AddWithValue("@SALARY", model.SALARY);
-                    command.Parameters.AddWithValue("@START_DATE", model.START_DATE);
-                    command.Parameters.AddWithValue("@GENDER", model.GENDER);
-                    command.Parameters.AddWithValue("@PHONE", model.PHONE);
-                    command.Parameters.AddWithValue("@ADDRESS", model.ADDRESS);
-                    command.Parameters.AddWithValue("@DEPARTMENT", model.DEPARTMENT);
-                    command.Parameters.AddWithValue("@BASIC_PAY", model.BASIC_PAY);
-                    command.Parameters.AddWithValue("@DEDUCTIONS", model.DEDUCTIONS);
-                    command.Parameters.AddWithValue("@TAXABLE_PAY", model.TAXABLE_PAY);
-                    command.Parameters.AddWithValue("@NET_PAY", model.NET_PAY);
-                    connection.Open();
-                    var result = command.ExecuteNonQuery();
-                    connection.Close();
-                    if (result != 0)
+                    using (connection)
                     {
-                        return true;
+                        SqlCommand command = new SqlCommand("ADD_EMPLOYEE", connection);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@NAME", model.NAME);
+                        command.Parameters.AddWithValue("@SALARY", model.SALARY);
+                        command.Parameters.AddWithValue("@START_DATE", model.START_DATE);
+                        command.Parameters.AddWithValue("@GENDER", model.GENDER);
+                        command.Parameters.AddWithValue("@PHONE", model.PHONE);
+                        command.Parameters.AddWithValue("@ADDRESS", model.ADDRESS);
+                        command.Parameters.AddWithValue("@DEPARTMENT", model.DEPARTMENT);
+                        command.Parameters.AddWithValue("@BASIC_PAY", model.BASIC_PAY);
+                        command.Parameters.AddWithValue("@DEDUCTIONS", model.DEDUCTIONS);
+                        command.Parameters.AddWithValue("@TAXABLE_PAY", model.TAXABLE_PAY);
+                        command.Parameters.AddWithValue("@NET_PAY", model.NET_PAY);
+                        connection.Open();
+                        var result = command.ExecuteNonQuery();
+                        connection.Close();
+                        if (result != 0)
+                        {
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
                 }
             }
             catch (Exception e)
@@ -175,7 +177,7 @@ namespace Access_SQL_ADO.NET
             payrollList.ForEach(EmpDetail =>
             {
                 Console.WriteLine("Employee Being Added : " + EmpDetail.NAME);
-                AddEmployee(EmpDetail);
+                this.AddEmployee(EmpDetail);
                 Console.WriteLine(EmpDetail.NAME + " Added");
             });
         }
@@ -185,13 +187,11 @@ namespace Access_SQL_ADO.NET
             {
                 Thread thread = new Thread(() =>
                 {
-                    Console.WriteLine("Employee Being Added : " + EmpDetails.NAME);
-                    
+                    this.AddEmployee(EmpDetails);
                     Console.WriteLine(EmpDetails.NAME + " Added");
                 });
                 thread.Start();
             });
-           
         }
     }
 } 
