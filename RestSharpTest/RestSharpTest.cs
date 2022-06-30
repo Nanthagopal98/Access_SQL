@@ -38,6 +38,21 @@ namespace RestSharpTest
             List<Employees> data = JsonConvert.DeserializeObject<List<Employees>>(resopnse.Content);
             Assert.AreEqual(7, data.Count);
         }
-        
+        [TestMethod]
+        public void OnPostingEmployeeData_ShouldAddtoJsonServer()
+        {
+            //Arrange
+            RestRequest request = new RestRequest("/employees", Method.Post);
+            var input = new Employees { Name = "Kavi", Salary = 50000 };
+            request.AddParameter("application/json", input, ParameterType.RequestBody);
+            //Act
+            RestResponse response = client.Execute(request);
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            Employees data = JsonConvert.DeserializeObject<Employees>(response.Content);
+            Assert.AreEqual("Kavi", data.Name);
+            Assert.AreEqual(50000, data.Salary);
+            Console.WriteLine(response.Content);
+        }
     }
 }
