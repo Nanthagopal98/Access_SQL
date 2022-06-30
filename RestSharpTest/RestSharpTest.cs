@@ -54,5 +54,25 @@ namespace RestSharpTest
             Assert.AreEqual(50000, data.Salary);
             Console.WriteLine(response.Content);
         }
+        [TestMethod]
+        public void AddMultipleEmployees_ShouldAddtoJsonServer()
+        {
+            Employees emp = new Employees();
+            List<Employees> list = new List<Employees>();
+            list.Add(new Employees { Name = "Muthu", Salary = 30000 });
+            list.Add(new Employees { Name = "Madhu", Salary = 40000 });           
+            RestResponse getresponse = getEmployeeList();
+            List<Employees> PresentData = JsonConvert.DeserializeObject<List<Employees>>(getresponse.Content);
+            int count = PresentData.Count;
+
+            list.ForEach(data =>
+            {
+                RestRequest request = new RestRequest("/employees", Method.Post);
+                request.AddParameter("application/json", data, ParameterType.RequestBody);
+                RestResponse response = client.Execute(request);
+                count++;
+            });
+            Assert.AreEqual(10, count);
+        }
     }
 }
