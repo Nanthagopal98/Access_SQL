@@ -74,5 +74,16 @@ namespace RestSharpTest
             });
             Assert.AreEqual(10, count);
         }
+        [TestMethod]
+        public void GivenUpdatedDetail_ShouldUpdateInServer()
+        {
+            var input = new Employees { Name = "Nanthagopal", Salary = 25000 };
+            RestRequest request = new RestRequest("/employees/1", Method.Put);
+            request.AddParameter("application/json", input, ParameterType.RequestBody);
+            RestResponse response = client.Execute(request);
+            Employees list = JsonConvert.DeserializeObject<Employees>(response.Content);
+            Assert.AreEqual(input.Name, list.Name);
+            Assert.AreEqual(input.Salary, list.Salary);
+        }
     }
 }
