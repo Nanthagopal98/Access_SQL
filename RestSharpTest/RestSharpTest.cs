@@ -85,5 +85,15 @@ namespace RestSharpTest
             Assert.AreEqual(input.Name, list.Name);
             Assert.AreEqual(input.Salary, list.Salary);
         }
+        [TestMethod]
+        public void GivenInputId_ShouldDeleteDataInServer()
+        {
+            RestRequest request = new RestRequest("/employees/11", Method.Delete);
+            RestResponse response = client.Execute(request);
+            RestResponse restResponse = getEmployeeList();
+            List<Employees> list = JsonConvert.DeserializeObject<List<Employees>>(restResponse.Content);
+            int count = list.Count;
+            Assert.AreEqual(9, count);
+        }
     }
 }
